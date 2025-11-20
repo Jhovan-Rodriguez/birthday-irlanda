@@ -24,7 +24,7 @@
             height: 100%;
             margin: 0;
             font-family: "Cormorant Garamond", "Georgia", "Times New Roman", serif;
-            background: 
+            background:
                 radial-gradient(1400px 800px at 10% 10%, rgba(14, 18, 30, 0.9), transparent),
                 radial-gradient(1000px 500px at 90% 90%, rgba(20, 10, 40, 0.6), transparent),
                 linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
@@ -53,8 +53,15 @@
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
+
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
 
         /* Layout */
@@ -126,12 +133,12 @@
             aspect-ratio: 1/1;
             border-radius: 50%;
             overflow: hidden;
-            background: radial-gradient(circle at 50% 40%, 
-                rgba(255, 255, 255, 0.05), 
-                rgba(255, 255, 255, 0.01));
+            background: radial-gradient(circle at 50% 40%,
+                    rgba(255, 255, 255, 0.05),
+                    rgba(255, 255, 255, 0.01));
             border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 
-                inset 0 0 120px rgba(255, 255, 255, 0.03), 
+            box-shadow:
+                inset 0 0 120px rgba(255, 255, 255, 0.03),
                 0 15px 50px var(--shadow-dark),
                 0 0 30px rgba(var(--glow-color), 0.1);
             display: flex;
@@ -142,8 +149,8 @@
 
         .star-frame:hover {
             transform: scale(1.02);
-            box-shadow: 
-                inset 0 0 120px rgba(255, 255, 255, 0.05), 
+            box-shadow:
+                inset 0 0 120px rgba(255, 255, 255, 0.05),
                 0 20px 60px var(--shadow-dark),
                 0 0 40px rgba(var(--glow-color), 0.15);
         }
@@ -156,9 +163,8 @@
             height: auto;
             z-index: 3;
             pointer-events: none;
-            filter: 
-                drop-shadow(0 0 4px rgba(var(--glow-color), 0.15)) 
-                drop-shadow(0 0 12px rgba(var(--glow-color), 0.08));
+            filter:
+                drop-shadow(0 0 4px rgba(var(--glow-color), 0.15)) drop-shadow(0 0 12px rgba(var(--glow-color), 0.08));
         }
 
 
@@ -231,9 +237,9 @@
 
         .quote {
             margin-top: 14px;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.03), 
-                rgba(255, 255, 255, 0.01));
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.03),
+                    rgba(255, 255, 255, 0.01));
             padding: 24px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -292,9 +298,9 @@
         .btn {
             appearance: none;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.05), 
-                rgba(255, 255, 255, 0.02));
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.05),
+                    rgba(255, 255, 255, 0.02));
             color: var(--accent);
             padding: 14px 22px;
             border-radius: 12px;
@@ -316,9 +322,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.1), 
-                rgba(255, 255, 255, 0.05));
+            background: linear-gradient(135deg,
+                    rgba(255, 255, 255, 0.1),
+                    rgba(255, 255, 255, 0.05));
             opacity: 0;
             transition: var(--transition);
             z-index: -1;
@@ -363,8 +369,15 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
         }
 
         /* Responsive */
@@ -388,7 +401,7 @@
                 max-width: 420px;
                 margin: 0 auto;
             }
-            
+
             h1 {
                 font-size: 32px;
             }
@@ -398,15 +411,15 @@
             .poster {
                 min-height: 300px;
             }
-            
+
             .card {
                 padding: 24px;
             }
-            
+
             h1 {
                 font-size: 28px;
             }
-            
+
             .cta {
                 flex-direction: column;
             }
@@ -417,23 +430,116 @@
             outline: 3px solid rgba(var(--glow-color), 0.3);
             outline-offset: 4px;
         }
+
+        /* INTRODUCCIÓN ROMÁNTICA */
+        .intro-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(160deg, #050516, #0a0f24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            opacity: 1;
+            transition: opacity 1.4s ease;
+        }
+
+        .intro-content {
+            text-align: center;
+            color: var(--accent);
+            max-width: 700px;
+            padding: 40px;
+            animation: fadeInUp 2s ease forwards;
+        }
+
+        .intro-title {
+            font-size: 46px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            color: var(--gold-light);
+            text-shadow: 0 0 25px rgba(var(--glow-color), 0.4);
+        }
+
+        .intro-text {
+            font-size: 22px;
+            line-height: 1.7;
+            color: var(--muted);
+            margin-bottom: 40px;
+        }
+
+        .intro-btn {
+            padding: 14px 30px;
+            border-radius: 14px;
+            font-size: 18px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--gold-light);
+            letter-spacing: 0.6px;
+            transition: all 0.4s ease;
+            text-shadow: 0 0 10px rgba(var(--glow-color), 0.4);
+            box-shadow: 0 0 20px rgba(var(--glow-color), 0.15);
+        }
+
+        .intro-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(var(--glow-color), 0.35);
+        }
+
+        /* Animación suave */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cuando desaparece */
+        .fade-out {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
+    <!-- INTRODUCCIÓN ROMÁNTICA -->
+    <div id="intro" class="intro-screen">
+        <div class="intro-content">
+            <h1 class="intro-title">Para ti, mi amor…</h1>
+            <p class="intro-text">
+                Hoy quiero regalarte un pedacito del cielo,<br>
+                porque desde que llegaste a mi vida,<br>
+                todo es más brillante, más suave, más infinito.<br><br>
+                Este regalo es para recordarte algo hermoso:<br>
+                <strong>el universo te soñó primero…<br> y yo tuve la fortuna de encontrarte después.</strong>
+            </p>
+
+            <button id="enter-btn" class="intro-btn">Ver tu constelación ✨</button>
+        </div>
+    </div>
+
     <!-- Estrellas de fondo -->
     <div class="stars-bg" id="stars-bg"></div>
-    
+
     <!-- Elementos decorativos flotantes -->
     <div class="floating-elements" id="floating-elements"></div>
-    
+
     <div class="wrap">
         <section class="card" aria-labelledby="title">
             <div class="star-area">
                 <div class="poster" role="region" aria-label="Mapa estelar">
                     <div class="star-frame" aria-hidden="false">
-                        <img src="constelation.jpg" class="star-img" alt="Mapa estelar de la noche del 21 de noviembre de 1989" />
+                        <img src="constelation.jpg" class="star-img"
+                            alt="Mapa estelar de la noche del 21 de noviembre de 1989" />
 
                         <canvas id="twinkle"></canvas>
                         <canvas id="lines"></canvas>
@@ -464,47 +570,57 @@
     </div>
 
     <script>
+        const intro = document.getElementById('intro');
+        const btn = document.getElementById('enter-btn');
+
+        btn.addEventListener('click', () => {
+            intro.classList.add('fade-out');
+            setTimeout(() => {
+                intro.style.display = 'none';
+            }, 1500); // coincide con la animación
+        });
+
         // Crear estrellas de fondo
         function createStars() {
             const starsBg = document.getElementById('stars-bg');
             const starCount = 150;
-            
+
             for (let i = 0; i < starCount; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
-                
+
                 const size = Math.random() * 2 + 1;
                 star.style.width = `${size}px`;
                 star.style.height = `${size}px`;
-                
+
                 star.style.left = `${Math.random() * 100}%`;
                 star.style.top = `${Math.random() * 100}%`;
-                
+
                 star.style.animationDelay = `${Math.random() * 5}s`;
-                
+
                 starsBg.appendChild(star);
             }
         }
-        
+
         // Crear elementos flotantes decorativos
         function createFloatingElements() {
             const container = document.getElementById('floating-elements');
             const elementCount = 12;
-            
+
             for (let i = 0; i < elementCount; i++) {
                 const element = document.createElement('div');
                 element.classList.add('floating-element');
-                
+
                 const size = Math.random() * 4 + 2;
                 element.style.width = `${size}px`;
                 element.style.height = `${size}px`;
-                
+
                 element.style.left = `${Math.random() * 100}%`;
                 element.style.top = `${Math.random() * 100}%`;
-                
+
                 element.style.animationDelay = `${Math.random() * 15}s`;
                 element.style.animationDuration = `${Math.random() * 10 + 10}s`;
-                
+
                 container.appendChild(element);
             }
         }
