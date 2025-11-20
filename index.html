@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Constelación — 21 Nov 1989</title>
+    <style>
+        :root {
+            --bg1: #030313;
+            --bg2: #0b1020;
+            --accent: #e9e6df;
+            --muted: #9a98a1;
+            --glass: rgba(255, 255, 255, 0.04);
+            /* Nuevos colores para el efecto premium */
+            --glow-color: 160, 200, 255;
+            --shadow-dark: rgba(2, 6, 20, 0.8);
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: "Georgia", "Times New Roman", serif;
+            /* Fondo cósmico más profundo */
+            background: radial-gradient(1400px 800px at 10% 10%, rgba(14, 18, 30, 0.8), transparent),
+                radial-gradient(1000px 500px at 90% 90%, rgba(20, 10, 40, 0.5), transparent),
+                linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
+            color: var(--accent);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Layout */
+        .wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+            box-sizing: border-box;
+        }
+
+        .card {
+            width: 100%;
+            /* Hacemos la tarjeta más estrecha para un aspecto más premium */
+            max-width: 1080px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.005));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 60px var(--shadow-dark);
+            padding: 40px;
+            border-radius: 14px;
+            display: grid;
+            /* 1.5fr para la imagen (más ancho), 1fr para el texto */
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            align-items: center;
+            /* Alinea verticalmente los contenidos de las columnas */
+        }
+
+        /* NUEVA SECCIÓN: Contenedor para el Mapa y el SVG de Grados */
+        .star-area {
+            position: relative;
+            /* Hacemos que la columna izquierda sea un contenedor flex para centrar vertical y horizontalmente sus contenidos */
+            display: flex;
+            flex-direction: column;
+            /* Apila la imagen y el SVG (aunque luego los superpondremos) */
+            align-items: center;
+            /* Centra horizontalmente */
+            justify-content: center;
+            /* Centra verticalmente */
+            height: 100%;
+            /* Ocupa la altura de la columna */
+        }
+
+        /* Left: Canvas / poster */
+        .poster {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 1/1;
+            /* IMPORTANTE: Esto asegura que el poster y el SVG se superpongan en el centro */
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .star-frame {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            /* Reducimos ligeramente el tamaño del marco */
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            /* Hacemos el marco circular inmediatamente */
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* Borde más visible */
+            box-shadow: inset 0 0 120px rgba(255, 255, 255, 0.02), 0 12px 40px var(--shadow-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* El SVG del Círculo de Grados */
+        .degrees-svg {
+            position: absolute;
+            /* Lo sacamos del flujo */
+            width: 125%;
+            /* Lo hacemos más grande para que rodee el star-frame */
+            max-width: 650px;
+            height: auto;
+            z-index: 3;
+            /* Asegura que esté por encima de la imagen */
+            pointer-events: none;
+            /* Aplica un filtro para que se vea más etéreo */
+            filter: drop-shadow(0 0 4px rgba(var(--glow-color), 0.1)) drop-shadow(0 0 12px rgba(var(--glow-color), 0.05));
+        }
+
+
+        /* The provided star image fills the circular area */
+        .star-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: contrast(1.05) brightness(0.95);
+            transform: scale(1.02);
+            /* Escala ligeramente para evitar bordes */
+        }
+
+        /* Los canvas se mantienen absolutos dentro de star-frame */
+        canvas#twinkle,
+        canvas#lines {
+            position: absolute;
+            inset: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 50%;
+            /* Los Canvas deben ser circulares también */
+            overflow: hidden;
+        }
+
+        /* Right column: texts */
+        .content {
+            color: var(--accent);
+            padding: 8px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: 32px;
+            /* Título más grande */
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(var(--glow-color), 0.1);
+            /* Efecto de brillo sutil */
+        }
+
+        p.lead {
+            margin: 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: none;
+        }
+
+        .quote {
+            margin-top: 14px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.00));
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-style: italic;
+            color: var(--accent);
+            line-height: 1.6;
+            box-shadow: 0 8px 25px var(--shadow-dark);
+        }
+
+        .meta {
+            margin-top: auto;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .cta {
+            margin-top: 18px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            color: var(--accent);
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all .28s ease;
+            box-shadow: 0 4px 10px var(--shadow-dark);
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px var(--shadow-dark), 0 0 15px rgba(var(--glow-color), 0.2);
+            border-color: rgba(var(--glow-color), 0.2);
+        }
+
+        /* Footer small print */
+        .small {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width:1100px) {
+            .card {
+                grid-template-columns: 1fr;
+                padding: 32px;
+                gap: 30px;
+            }
+
+            /* En móvil, el mapa estelar va primero */
+            .star-area {
+                order: 1;
+            }
+
+            .content {
+                order: 2;
+            }
+
+            .poster {
+                min-height: 420px;
+                max-width: 420px;
+                /* Centra el mapa en el flujo normal de la columna */
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width:480px) {
+            .poster {
+                min-height: 300px;
+            }
+        }
+
+
+        /* Subtle focus outline for keyboard users */
+        .btn:focus {
+            outline: 3px solid rgba(var(--glow-color), 0.3);
+            outline-offset: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <section class="card" aria-labelledby="title">
+            <div class="star-area">
+                <div class="poster" role="region" aria-label="Mapa estelar">
+                    <div class="star-frame" aria-hidden="false">
+                        <img src="constelation.jpg" class="star-img" />
+
+                        <canvas id="twinkle"></canvas>
+                        <canvas id="lines"></canvas>
+                    </div>
+                </div>
+
+                <img src="circle.svg" class="degrees-svg" alt="Círculo de grados de la constelación" />
+
+            </div>
+
+            <div class="content">
+                <h1 id="title">Primero fuiste un sueño del universo, luego un milagro en mi vida.</h1>
+                <p class="lead">He tomado el cielo de la noche en la que naciste y lo he convertido en un pequeño
+                    escenario: estrellas que titilan como recuerdos, líneas que susurran historias y un mensaje que te
+                    pertenece.</p>
+
+                <div class="quote">
+                    <strong>Feliz cumpleaños, mi amor.</strong><br>
+                    Que este cielo sea un recordatorio de que cada instante contigo brilla con luz propia.
+                </div>
+
+                <div class="meta">
+                    <div><strong>Lugar:</strong>Reynosa</div>
+                    <div><strong>Fecha:</strong>21 de noviembre de 1989</div>
+                    <div class="small">Una composición hecha a mano y animada para ti — regalo de corazón.</div>
+                </div>
+
+                <div class="cta" aria-hidden="true">
+                    <button class="btn" id="toggleGlow">Alternar brillo</button>
+                    <button class="btn" id="downloadBtn">Guardar como imagen</button>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script>
+        /* -------------------------
+           Canvas: twinkling particles
+           ------------------------- */
+        const frame = document.querySelector('.star-frame');
+        const twinkleCanvas = document.getElementById('twinkle');
+        const linesCanvas = document.getElementById('lines');
+        const twCtx = twinkleCanvas.getContext('2d');
+        const lnCtx = linesCanvas.getContext('2d');
+
+        function resizeCanvases() {
+            const rect = frame.getBoundingClientRect();
+            [twinkleCanvas, linesCanvas].forEach(c => {
+                c.width = rect.width * devicePixelRatio;
+                c.height = rect.height * devicePixelRatio;
+                c.style.width = rect.width + 'px';
+                c.style.height = rect.height + 'px';
+            });
+            twCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+            lnCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+
+        const particles = [];
+        const PARTICLE_COUNT = Math.round(Math.min(140, (twinkleCanvas.width / devicePixelRatio) / 4));
+
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+
+        function initParticles() {
+            particles.length = 0;
+            const w = twinkleCanvas.width / devicePixelRatio;
+            const h = twinkleCanvas.height / devicePixelRatio;
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                const p = {
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    r: Math.random() * 1.6 + 0.3,
+                    baseA: Math.random() * 0.9 + 0.1,
+                    phase: Math.random() * Math.PI * 2,
+                    speed: Math.random() * 0.01 + 0.005,
+                    layer: Math.random() < 0.18 ? 2 : (Math.random() < 0.35 ? 1 : 0) // layers for depth
+                };
+                particles.push(p);
+            }
+        }
+
+        initParticles();
+
+        // A set of soft "constellation nodes" (decorative highlights)
+        // These are relative positions inside the circular area (0..1)
+        const nodesRel = [
+            { x: 0.32, y: 0.44 },
+            { x: 0.42, y: 0.38 },
+            { x: 0.52, y: 0.46 },
+            { x: 0.61, y: 0.40 },
+            { x: 0.68, y: 0.52 },
+            { x: 0.52, y: 0.62 },
+            { x: 0.38, y: 0.6 }
+        ];
+
+        let animateGlow = true;
+
+        function draw() {
+            const w = twinkleCanvas.width / devicePixelRatio;
+            const h = twinkleCanvas.height / devicePixelRatio;
+            twCtx.clearRect(0, 0, w, h);
+            lnCtx.clearRect(0, 0, w, h);
+
+            // twinkling particles
+            particles.forEach(p => {
+                p.phase += p.speed;
+                const a = Math.max(0.08, Math.abs(Math.sin(p.phase)) * p.baseA);
+                // layer-based brightness & size
+                const size = p.r * (1 + p.layer * 0.6);
+                const brightness = 160 + p.layer * 60;
+                twCtx.beginPath();
+                // radial gradient for soft glow
+                const g = twCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 6);
+                g.addColorStop(0, `rgba(${brightness},${brightness},${brightness},${a})`);
+                g.addColorStop(0.35, `rgba(${brightness},${brightness},${brightness},${a * 0.35})`);
+                g.addColorStop(1, `rgba(0,0,0,0)`);
+                twCtx.fillStyle = g;
+                twCtx.fillRect(p.x - size * 6, p.y - size * 6, size * 12, size * 12);
+            });
+
+            // Soft connecting lines between nodes (stylized constellation)
+            const pad = 0;
+            const cx = w / 2, cy = h / 2;
+            lnCtx.lineWidth = 1.0;
+            lnCtx.strokeStyle = 'rgba(230,230,240,0.06)';
+            lnCtx.beginPath();
+            for (let i = 0; i < nodesRel.length - 1; i++) {
+                const a = nodesRel[i];
+                const b = nodesRel[i + 1];
+                const ax = a.x * w;
+                const ay = a.y * h;
+                const bx = b.x * w;
+                const by = b.y * h;
+                lnCtx.moveTo(ax, ay);
+                lnCtx.lineTo(bx, by);
+            }
+            lnCtx.stroke();
+
+            // Highlight nodes as small glows & core dots
+            nodesRel.forEach((n, idx) => {
+                const x = n.x * w;
+                const y = n.y * h;
+                // soft halo
+                const halo = lnCtx.createRadialGradient(x, y, 0, x, y, 26);
+                const alpha = 0.12 + 0.06 * Math.sin((Date.now() / 800) + idx);
+                halo.addColorStop(0, `rgba(255,255,255,${alpha})`);
+                halo.addColorStop(1, `rgba(255,255,255,0)`);
+                lnCtx.fillStyle = halo;
+                lnCtx.beginPath();
+                lnCtx.arc(x, y, 26, 0, Math.PI * 2);
+                lnCtx.fill();
+
+                // core dot
+                lnCtx.beginPath();
+                lnCtx.fillStyle = 'rgba(255,255,255,0.9)';
+                lnCtx.arc(x, y, 1.6, 0, Math.PI * 2);
+                lnCtx.fill();
+            });
+
+            // central soft glow (animated)
+            if (animateGlow) {
+                const gsize = Math.min(w, h) * 0.22;
+                const grad = lnCtx.createRadialGradient(cx, cy, 0, cx, cy, gsize);
+                const gAlpha = 0.04 + 0.02 * Math.sin(Date.now() / 900);
+                grad.addColorStop(0, `rgba(255,240,220,${gAlpha})`);
+                grad.addColorStop(1, `rgba(255,240,220,0)`);
+                lnCtx.fillStyle = grad;
+                lnCtx.beginPath();
+                lnCtx.arc(cx, cy, gsize, 0, Math.PI * 2);
+                lnCtx.fill();
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        // Re-init when canvas dimensions change
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                resizeCanvases();
+                initParticles();
+            }, 120);
+        });
+
+        // Toggle glow
+        document.getElementById('toggleGlow').addEventListener('click', () => {
+            animateGlow = !animateGlow;
+            document.getElementById('toggleGlow').textContent = animateGlow ? 'Alternar brillo' : 'Brillo desactivado';
+        });
+
+        /* -------------------------
+           Download snapshot of the poster area
+           ------------------------- */
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            // We'll compose an offscreen canvas merging the image + overlays
+            const rect = frame.getBoundingClientRect();
+            const outCanvas = document.createElement('canvas');
+            outCanvas.width = rect.width * devicePixelRatio;
+            outCanvas.height = rect.height * devicePixelRatio;
+            const outCtx = outCanvas.getContext('2d');
+            outCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+
+            // draw the image (we take the visible img element)
+            const img = frame.querySelector('.star-img');
+            // because of CORS/local file, this will work when running locally.
+            outCtx.drawImage(img, 0, 0, rect.width, rect.height);
+
+            // draw current twinkle and lines
+            outCtx.drawImage(twinkleCanvas, 0, 0, rect.width, rect.height);
+            outCtx.drawImage(linesCanvas, 0, 0, rect.width, rect.height);
+
+            const link = document.createElement('a');
+            link.download = 'constelacion_21nov1989.png';
+            link.href = outCanvas.toDataURL('image/png');
+            link.click();
+        });
+
+        /* Accessibility: keyboard-trigger toggle */
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'g' || e.key === 'G') {
+                document.getElementById('toggleGlow').click();
+            }
+        });
+
+    </script>
+</body>
+
+</html>
